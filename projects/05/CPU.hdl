@@ -39,8 +39,8 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-    // Whether A should be M[A]
-    Not(in=instruction[15], out=loadImmediate);
+
+    // A or M control bit
     And(a=instruction[15], b=instruction[12], out=isMemory);
 
     // ALU control bits
@@ -50,37 +50,47 @@ CHIP CPU {
     And(a=instruction[15], b=instruction[8], out=ny);
     And(a=instruction[15], b=instruction[7], out=f);
     And(a=instruction[15], b=instruction[6], out=no);
-    
-    And(a=instruction[15], b=instruction[5], out=storeA);
-    And(a=instruction[15], b=instruction[4], out=storeD);
+
+    // Write control bits
+    And(a=instruction[15], b=instruction[5], out=writeA);
+    And(a=instruction[15], b=instruction[4], out=writeD);
     And(a=instruction[15], b=instruction[3], out=writeM);
-    
+
+    // Jump control bits
     And(a=instruction[15], b=instruction[2], out=j1);
     And(a=instruction[15], b=instruction[1], out=j2);
     And(a=instruction[15], b=instruction[0], out=j3);
 
-    Mux16(a=a, b=inM, sel=isMemory, out=am);
-
-    // Register A
+    // If instruction[15] == 0 set aIn to the instruction
+    Not(in=instruction[15], out=loadImmediate);
     Mux16(a=aluOut, b=instruction, sel=loadImmediate, out=aIn);
-    Or(a=storeA, b=loadImmediate, out=loadA);
+
+    // A Register
+    Or(a=writeA, b=loadImmediate, out=loadA);
     ARegister(in=aIn, load=loadA, out=a, out[0..14]=addressM);
 
-    // Register D
-    DRegister(in=aluOut, load=storeD, out=d);
+    // Calculate A/M 
+    Mux16(a=a, b=inM, sel=isMemory, out=am);
+
+    // D Register
+    DRegister(in=aluOut, load=writeD, out=d);
 
     // ALU
     ALU(x=d, y=am, zx=zx, nx=nx, zy=zy, ny=ny, f=f, no=no, out=outM, out=aluOut, zr=zr, ng=ng);
 
+    // Jump logic
     And(a=ng, b=j1, out=jumpNg);
     And(a=zr, b=j2, out=jumpZr);
 
     Not(in=ng, out=nng);
     Not(in=zr, out=nzr);
-    And(a=nzr, b=nng, out=ps);
+    And(a=nzr, b=nng, out=ps); // Not negative and not zero, so positive
     And(a=ps, b=j3, out=jumpPs);
 
+    // Load PC if any of the jump bits are set
     Or(a=jumpNg, b=jumpZr, out=jumpNgZr);
-    Or(a=jumpNgZr, b=jumpPs, out=jump);
-    PC(in=a, load=jump, inc=true, reset=reset, out[0..14]=pc);
+    Or(a=jumpNgZr, b=jumpPs, out=loadPc);
+
+    // Program counter
+    PC(in=a, load=loadPc, inc=true, reset=reset, out[0..14]=pc);
 }

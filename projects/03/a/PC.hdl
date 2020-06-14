@@ -16,13 +16,19 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
+    // Determine whether we should load a value
     Or(a=load, b=reset, out=loadOrReset);
-    Or(a=loadOrReset, b=inc, out=loading);
+    Or(a=loadOrReset, b=inc, out=loadOrResetOrInc);
 
+    // out[t+1] = out[t] + 1 if inc[t] == 1
     Add16(a[0]=true, b=value, out=incremented);
     Mux16(a=value, b=incremented, sel=inc, out=value1);
+
+    // out[t+1] = in[t] if load[t] == 1
     Mux16(a=value1, b=in, sel=load, out=value2);
+
+    // out[t+1] = 0 if reset[t] == 1
     Mux16(a=value2, b=false, sel=reset, out=value3);
 
-    Register(in=value3, load=loading, out=value, out=out);
+    Register(in=value3, load=loadOrResetOrInc, out=value, out=out);
 }

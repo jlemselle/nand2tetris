@@ -1,0 +1,8 @@
+CHIP Byte {
+    IN in[8], load;
+    OUT out[8];
+
+    PARTS:
+    Nibble(in=in[0..3], load=load, out=out[0..3]);
+    Nibble(in=in[4..7], load=load, out=out[4..7]);
+}

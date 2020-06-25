@@ -1,0 +1,10 @@
+CHIP FlipFlop {
+    IN pr, clr, in;
+    OUT out;
+
+    PARTS:
+    Not(in=clr, out=enabled);
+    DFF(in=in, out=data);
+    Or(a=pr, b=data, out=data2);
+    And(a=enabled, b=data2, out=out);
+}

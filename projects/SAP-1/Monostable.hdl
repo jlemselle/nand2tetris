@@ -1,0 +1,9 @@
+CHIP Monostable {
+    IN in;
+    OUT out;
+    PARTS:
+    Not(in=in, out=nin);
+    DFF(in=nin, out=d);
+    And(a=in, b=d, out=out);
+
+}

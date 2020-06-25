@@ -1,0 +1,9 @@
+CHIP Ring {
+    IN clr;
+    OUT a, b, c, d;
+    PARTS:
+    FlipFlop(in=d4, pr=clr, out=d1, out=a);
+    FlipFlop(clr=clr, in=d1, out=d2, out=b);
+    FlipFlop(clr=clr, in=d2, out=d3, out=c);
+    FlipFlop(clr=clr, in=d3, out=d4, out=d);
+}

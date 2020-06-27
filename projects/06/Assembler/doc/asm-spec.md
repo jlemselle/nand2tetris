@@ -1,6 +1,24 @@
 // comment  
 (LABEL)
 
+# Tokens
+
+comment
+symbol ( ) @ = ; - ! + & |
+identifier [a-zA-Z_\.\$:][a-zA-Z0-9_\.\$:]*
+number
+D
+A
+M
+JGT
+JEQ
+JGE
+JLT
+JNE
+JLE
+JMP
+newline
+T
 # Symbol
 
 A user-defined symbol can be any sequence of letters, digits, underscores (_), dot (.), dollar sign ($), and colon (:) that does not begin with a digit.

@@ -11,4 +11,16 @@
     <ProjectReference Include="..\Assembler.Core\Assembler.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Add.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="MaxL.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Pong.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

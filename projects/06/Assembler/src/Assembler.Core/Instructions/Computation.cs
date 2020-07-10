@@ -1,0 +1,34 @@
+﻿namespace Assembler.Core.Instructions
+{
+    public enum Computation
+    {
+        Zero,
+        One,
+        NegativeOne,
+        D,
+        A,
+        M,
+        InverseOfD,
+        InverseOfA,
+        InverseOfM,
+        NegativeD,
+        NegativeA,
+        NegativeM,
+        DPlusOne,
+        APlusOne,
+        MPlusOne,
+        DMinusOne,
+        AMinusOne,
+        MMinusOne,
+        DPlusA,
+        DPlusM,
+        DMinusA,
+        DMinusM,
+        AMinusD,
+        MMinusD,
+        DAndA,
+        DAndM,
+        DOrA,
+        DOrM
+    }
+}

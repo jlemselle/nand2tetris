@@ -1,7 +1,6 @@
 ﻿using Superpower.Display;
-using Superpower.Parsers;
 
-namespace Assembler.Core
+namespace Assembler.Core.Parsers
 {
     public enum AsmToken
     {
@@ -21,39 +20,25 @@ namespace Assembler.Core
         Semicolon,
 
         [Token(Example = "-")]
-        Minus,
+        Dash,
 
         [Token(Example = "!")]
         ExclamationMark,
 
         [Token(Example = "+")]
-        Plus,
+        Add,
 
         [Token(Example = "&")]
-        And,
+        Ampersand,
 
         [Token(Example = "|")]
-        Or,
+        Pipe,
 
         D,
 
         A,
 
         M,
-
-        JGT,
-
-        JEQ,
-
-        JGE,
-
-        JLT,
-
-        JNE,
-
-        JLE,
-
-        JMP,
 
         Number,
 

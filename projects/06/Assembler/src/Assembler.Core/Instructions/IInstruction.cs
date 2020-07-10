@@ -2,6 +2,6 @@
 {
     public interface IInstruction
     {
-        public short ToShort();
+        string AsString();
     }
 }

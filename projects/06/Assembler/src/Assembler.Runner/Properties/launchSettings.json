@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Assembler.Runner": {
+      "commandName": "Project",
+      "commandLineArgs": "Pong.asm"
+    }
+  }
+}

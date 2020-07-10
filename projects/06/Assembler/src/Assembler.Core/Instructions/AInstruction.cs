@@ -2,9 +2,11 @@ using System;
 
 namespace Assembler.Core.Instructions
 {
-    public class AInstruction : IInstruction
+    public class AInstruction
+        : IInstruction
     {
         public short Value { get; }
+
         public AInstruction(short value)
         {
             if (value < 0b0000_0000_0000_0000 || value > 0b0111_1111_1111_1111)
@@ -15,9 +17,9 @@ namespace Assembler.Core.Instructions
             Value = value;
         }
 
-        public short ToShort()
+        public string AsString()
         {
-            return Value;
+            return Convert.ToString(Value, 2).PadLeft(16, '0');
         }
     }
 }

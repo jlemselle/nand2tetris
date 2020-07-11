@@ -15,6 +15,8 @@ namespace VirtualMachine
             Parser parser = new Parser(reader);
             CodeWriter codeWriter = new CodeWriter(writer);
 
+            codeWriter.SetFileName(Path.GetFileNameWithoutExtension(file));
+
             while (parser.HasMoreCommands())
             {
                 parser.Advance();
@@ -23,7 +25,8 @@ namespace VirtualMachine
                 {
                     codeWriter.WriteArithmetic(parser.GetArg1());
                 }
-                else if (parser.GetCommandType() == CommandType.PUSH)
+                else if (parser.GetCommandType() == CommandType.PUSH
+                    || parser.GetCommandType() == CommandType.POP)
                 {
                     codeWriter.WritePushPop(parser.GetCommandType(), parser.GetArg1(), parser.GetArg2());
                 }

@@ -3,7 +3,7 @@ namespace Compiler
     public enum Segment
     {
         CONSTANT,
-        ARG,
+        ARGUMENT,
         LOCAL,
         STATIC,
         THIS,

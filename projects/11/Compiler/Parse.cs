@@ -148,24 +148,24 @@ namespace Compiler
             ConsumeToken();
         }
 
-        internal void String()
+        internal void String(out string value)
         {
             if (!Is.String())
             {
                 throw new ParseException(tokenizer, $"Expected string");
             }
-
+            value = tokenizer.GetStringVal();
             ConsumeToken();
         }
 
-        internal void ExprKeyword()
+        internal void ExprKeyword(out string keyword)
         {
-            OneOfKeywords(out string _, "true", "false", "null", "this");
+            OneOfKeywords(out keyword, "true", "false", "null", "this");
         }
 
-        internal void ExprUnaryOp()
+        internal void ExprUnaryOp(out char unaryOp)
         {
-            OneOfSymbols(out char _, '-', '~');
+            OneOfSymbols(out unaryOp, '-', '~');
         }
 
         public void EndOfFile()

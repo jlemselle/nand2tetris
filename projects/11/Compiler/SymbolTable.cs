@@ -57,13 +57,13 @@ namespace Compiler
 
         public Kind KindOf(string name)
         {
-            if (classSymbols.ContainsKey(name))
-            {
-                return classSymbols[name].Kind;
-            }
-            else if (subroutineSymbols.ContainsKey(name))
+            if (subroutineSymbols.ContainsKey(name))
             {
                 return subroutineSymbols[name].Kind;
+            }
+            else if (classSymbols.ContainsKey(name))
+            {
+                return classSymbols[name].Kind;
             }
 
             return Kind.NONE;
@@ -71,13 +71,13 @@ namespace Compiler
 
         public string TypeOf(string name)
         {
-            if (classSymbols.ContainsKey(name))
-            {
-                return classSymbols[name].Type;
-            }
-            else if (subroutineSymbols.ContainsKey(name))
+            if (subroutineSymbols.ContainsKey(name))
             {
                 return subroutineSymbols[name].Type;
+            }
+            else if (classSymbols.ContainsKey(name))
+            {
+                return classSymbols[name].Type;
             }
 
             return string.Empty;
@@ -85,13 +85,13 @@ namespace Compiler
 
         public int IndexOf(string name)
         {
-            if (classSymbols.ContainsKey(name))
-            {
-                return classSymbols[name].Index;
-            }
-            else if (subroutineSymbols.ContainsKey(name))
+            if (subroutineSymbols.ContainsKey(name))
             {
                 return subroutineSymbols[name].Index;
+            }
+            else if (classSymbols.ContainsKey(name))
+            {
+                return classSymbols[name].Index;
             }
 
             return 0;

@@ -154,9 +154,16 @@ namespace Compiler
                 && (tokenizer.nextToken == "(" || tokenizer.nextToken == ".");
         }
 
-        public bool Integer()
+        public bool Integer(out int value)
         {
-            return tokenizer.GetTokenType() == TokenType.INT_CONST;
+            if (tokenizer.GetTokenType() == TokenType.INT_CONST)
+            {
+                value = tokenizer.GetIntVal();
+                return true;
+            }
+
+            value = 0;
+            return false;
         }
 
         public bool String()
@@ -166,7 +173,7 @@ namespace Compiler
 
         public bool ExprTerm()
         {
-            return Integer()
+            return Integer(out int _)
             || String()
             || ExprKeyword()
             || Identifier(out string _)

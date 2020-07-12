@@ -133,14 +133,14 @@ namespace Compiler
             ConsumeToken();
         }
 
-        internal void ExprOp()
+        internal void ExprOp(out char symbol)
         {
-            OneOfSymbols(out char _, '+', '-', '*', '/', '&', '|', '<', '>', '=');
+            OneOfSymbols(out symbol, '+', '-', '*', '/', '&', '|', '<', '>', '=');
         }
 
-        internal void Integer()
+        internal void Integer(out int value)
         {
-            if (!Is.Integer())
+            if (!Is.Integer(out value))
             {
                 throw new ParseException(tokenizer, $"Expected integer");
             }

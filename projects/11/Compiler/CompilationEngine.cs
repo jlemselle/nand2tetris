@@ -7,24 +7,25 @@ namespace Compiler
 {
     public class CompilationEngine
     {
-        private readonly TextWriter writer;
+        private readonly VMWriter writer;
         private readonly JackTokenizer tokenizer;
         private readonly SymbolTable symbolTable;
         private readonly Parse Parse;
         private readonly Is Is;
         public CompilationEngine(JackTokenizer tokenizer, TextWriter writer)
         {
-            this.writer = writer;
+            this.writer = new VMWriter(writer);
             this.tokenizer = tokenizer;
             Parse = new Parse(tokenizer);
             Is = new Is(tokenizer);
             symbolTable = new SymbolTable();
         }
 
+        private string? className;
         public void CompileClass()
         {
             Parse.Keyword("class");
-            Parse.Identifier("class name", out string className);
+            Parse.Identifier("class name", out className);
             Parse.Symbol('{');
 
             while (Is.ClassVarDec())
@@ -71,6 +72,8 @@ namespace Compiler
             {
                 CompileVarDec();
             }
+
+            writer.WriteFunction($"{className}.{subroutineName}", symbolTable.VarCount(Kind.VAR));
 
             CompileStatements();
 
@@ -169,6 +172,8 @@ namespace Compiler
                 CompileExpression();
             }
             Parse.Symbol(';');
+
+            writer.WriteReturn();
         }
 
         public void CompileIf()
@@ -199,16 +204,29 @@ namespace Compiler
 
             while (Is.ExprOp())
             {
-                Parse.ExprOp();
+                Parse.ExprOp(out char symbol);
                 CompileTerm();
+
+                switch (symbol)
+                {
+                    case '+':
+                        writer.WriteArithmetic(Command.ADD);
+                        break;
+                    case '*':
+                        writer.WriteCall("Math.multiply", 2);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
         public void CompileTerm()
         {
-            if (Is.Integer())
+            if (Is.Integer(out int _))
             {
-                Parse.Integer();
+                Parse.Integer(out int value);
+                writer.WritePush(Segment.CONSTANT, value);
             }
             else if (Is.String())
             {
@@ -245,15 +263,18 @@ namespace Compiler
             }
         }
 
-        public void CompileExpressionList()
+        public void CompileExpressionList(out int count)
         {
+            count = 0;
             if (Is.ExprTerm())
             {
+                count++;
                 CompileExpression();
             }
 
             while (Is.Symbol(','))
             {
+                count++;
                 Parse.Symbol(',');
                 CompileExpression();
             }
@@ -261,15 +282,26 @@ namespace Compiler
 
         public void CompileSubroutineCall()
         {
-            Parse.Identifier("class, var or subroutine name", out string _);
+            Parse.Identifier("class, var or subroutine name", out string firstIdentifier);
+            string? varOrClassName = null;
+            string subroutineName;
             if (Is.Symbol('.'))
             {
                 Parse.Symbol('.');
-                Parse.Identifier("subroutine name", out string _);
+                Parse.Identifier("subroutine name", out string secondIdentifier);
+                varOrClassName = firstIdentifier;
+                subroutineName = secondIdentifier;
+            }
+            else
+            {
+                subroutineName = firstIdentifier;
             }
             Parse.Symbol('(');
-            CompileExpressionList();
+            CompileExpressionList(out int args);
             Parse.Symbol(')');
+
+
+            writer.WriteCall($"{varOrClassName}.{subroutineName}", args);
         }
     }
 }

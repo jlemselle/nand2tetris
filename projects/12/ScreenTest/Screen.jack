@@ -32,6 +32,7 @@ class Screen {
         let twoToThe[13] = 8192;
         let twoToThe[14] = 16384;
         let twoToThe[15] = ~32767;
+        let color = true;
         return;
     }
 
@@ -70,24 +71,82 @@ class Screen {
 
     /** Draws a line from pixel (x1,y1) to pixel (x2,y2), using the current color. */
     function void drawLine(int x1, int y1, int x2, int y2) {
-        var int dx, dy, a, b, diff, x, y;
-        let x = Math.min(x1, x2);
-        let y = Math.min(y1, y2);
-        let dx = Math.max(x1, x2) - x;
-        let dy = Math.max(y1, y2) - y;
-        let a = 0;
-        let b = 0;
-        let diff = 0;
-        while (~(a > dx) & ~(b > dy)) {
-            do Screen.drawPixel(x + a, y + b);
+        var boolean slope;
+        let slope = Math.abs(y1 - y0) < Math.abs(x1 - x0);
+        if (slope & x0 > x1)
+        {
+            do plotLineLow(x1, y1, x0, y0);
+        }
+        else if (slope & ~(x0 > x1))
+        {
+            do plotLineLow(x0, y0, x1, y1);
+        }
+        else if (~slope & y0 > y1)
+        {
+            do plotLineLow(x1, y1, x0, y0);
+        }
+        else
+        {
+            do plotLineLow(x0, y0, x1, y1);
+        }
 
-            if (diff < 0) {
-                let a = a + 1;
-                let diff = diff + dy;
-            } else {
-                let b = b + 1;
-                let diff = diff - dx;
+        return;
+    }
+
+    function void plotLineLow(int x0, int y0, int x1, int y1) {
+        var int dx, dy, yi, D, x, y;
+
+        let dx = x1 - x0;
+        let dy = y1 - y0;
+        let yi = 1;
+        if (dy < 0)
+        {
+            let yi = -1;
+            let dy = -dy;
+        }
+        let D = dy + dy - dx;
+        let y = y0;
+
+        let x = x0;
+        while (x < x1)
+        {
+            do drawPixel(x, y);
+            if (D > 0)
+            {
+                let y = y + yi;
+                let D = D - (dx + dx);
             }
+            let D = D + dy + dy;
+            let x = x + 1;
+        }
+        return;
+    }
+
+    function void plotLineHigh(int x0, int y0, int x1, int y1) {
+        var int dx, dy, xi, D, x, y;
+
+        let dx = x1 - x0;
+        let dy = y1 - y0;
+        let xi = 1;
+        if (dx < 0)
+        {
+            let xi = -1;
+            let dx = -dx;
+        }
+        let D = dx + dx - dy;
+        let x = x0;
+
+        let y = y0;
+        while (y < y1)
+        {
+            do drawPixel(x, y);
+            if (D > 0)
+            {
+                let x = x + xi;
+                let D = D - (dy + dy);
+            }
+            let D = D + dy + dy;
+            let y = y + 1;
         }
         return;
     }
